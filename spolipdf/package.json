@@ -1,5 +1,5 @@
 {
-  "name": "spolipdf",
+  "name": "spoly",
   "private": true,
   "version": "0.0.0",
   "type": "module",
@@ -12,6 +12,7 @@
   "dependencies": {
     "@tailwindcss/vite": "^4.1.18",
     "file-saver": "^2.0.5",
+    "html2canvas": "^1.4.1",
     "jspdf": "^4.1.0",
     "lucide-react": "^0.563.0",
     "react": "^19.2.0",

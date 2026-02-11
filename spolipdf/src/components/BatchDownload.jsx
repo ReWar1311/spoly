@@ -17,7 +17,7 @@ import {
   downloadAllAsPDF,
 } from '../utils/exporters';
 
-export default function BatchDownload({ queue }) {
+export default function BatchDownload({ queue, pdfSettings }) {
   const [status, setStatus] = useState(null); // null | 'downloading' | 'done'
   const [selectedFormat, setSelectedFormat] = useState('pdf');
 
@@ -37,7 +37,7 @@ export default function BatchDownload({ queue }) {
   ];
 
   const downloadFn = {
-    pdf: downloadAsPDF,
+    pdf: (song) => downloadAsPDF(song, pdfSettings),
     lrc: downloadAsLRC,
     txt: downloadAsTXT,
     srt: downloadAsSRT,
@@ -47,14 +47,11 @@ export default function BatchDownload({ queue }) {
     setStatus('downloading');
     try {
       if (selectedFormat === 'pdf' && songsWithLyrics.length > 1) {
-        // Batch PDF: single file with all songs
-        downloadAllAsPDF(songsWithLyrics);
+        await downloadAllAsPDF(songsWithLyrics, pdfSettings);
       } else {
-        // Individual files
         for (const song of songsWithLyrics) {
           try {
-            downloadFn[selectedFormat](song);
-            // Small delay between downloads
+            await downloadFn[selectedFormat](song);
             await new Promise((r) => setTimeout(r, 300));
           } catch (err) {
             console.warn(`Failed to download ${song.title}:`, err);

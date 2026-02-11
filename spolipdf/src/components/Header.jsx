@@ -1,6 +1,6 @@
-import { Music, Github } from 'lucide-react';
+import { Music, Github, Settings } from 'lucide-react';
 
-export default function Header({ songCount }) {
+export default function Header({ songCount, onOpenSettings }) {
   return (
     <header className="sticky top-0 z-50 glass border-b border-white/5">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -12,7 +12,7 @@ export default function Header({ songCount }) {
             </div>
             <div>
               <h1 className="text-lg font-bold text-white tracking-tight">
-                Spo<span className="text-spotify">Ly</span>PDF
+                Spo<span className="text-spotify">Ly</span>
               </h1>
             </div>
           </div>
@@ -27,8 +27,15 @@ export default function Header({ songCount }) {
                 </span>
               </div>
             )}
+            <button
+              onClick={onOpenSettings}
+              className="p-2 rounded-lg text-gray-400 hover:text-white hover:bg-white/5 transition-colors"
+              title="PDF Settings"
+            >
+              <Settings className="w-5 h-5" />
+            </button>
             <a
-              href="https://github.com"
+              href="https://github.com/ReWar1311/spoly"
               target="_blank"
               rel="noopener noreferrer"
               className="p-2 rounded-lg text-gray-400 hover:text-white hover:bg-white/5 transition-colors"

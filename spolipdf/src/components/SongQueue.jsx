@@ -1,5 +1,25 @@
+import { useState } from 'react';
 import { X, Eye, Music2, GripVertical } from 'lucide-react';
 import { formatDuration } from '../utils/lyricsApi';
+
+function SmallThumb({ src }) {
+  const [error, setError] = useState(false);
+  if (!src || error) {
+    return (
+      <div className="w-10 h-10 rounded-lg bg-linear-to-br from-spotify/20 to-accent/20 flex items-center justify-center shrink-0">
+        <Music2 className="w-5 h-5 text-spotify/60" />
+      </div>
+    );
+  }
+  return (
+    <img
+      src={src}
+      alt=""
+      onError={() => setError(true)}
+      className="w-10 h-10 rounded-lg object-cover shrink-0"
+    />
+  );
+}
 
 export default function SongQueue({ queue, onRemove, onSelect, selectedId }) {
   if (queue.length === 0) return null;
@@ -36,9 +56,7 @@ export default function SongQueue({ queue, onRemove, onSelect, selectedId }) {
             </div>
 
             {/* Art */}
-            <div className="w-10 h-10 rounded-lg bg-linear-to-br from-spotify/20 to-accent/20 flex items-center justify-center shrink-0">
-              <Music2 className="w-5 h-5 text-spotify/60" />
-            </div>
+            <SmallThumb src={song.thumbnail} />
 
             {/* Info */}
             <div className="flex-1 min-w-0">
@@ -48,6 +66,7 @@ export default function SongQueue({ queue, onRemove, onSelect, selectedId }) {
               <p className="text-xs text-gray-400 truncate">
                 {song.artist}
                 {song.duration > 0 && ` • ${formatDuration(song.duration)}`}
+                {song.language && ` • ${song.language.flag} ${song.language.name}`}
               </p>
             </div>
 

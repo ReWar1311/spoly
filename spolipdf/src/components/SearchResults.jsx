@@ -1,12 +1,32 @@
-import { Music2, Plus, Check, Clock, Mic2 } from 'lucide-react';
+import { useState } from 'react';
+import { Music2, Plus, Check, Clock, Mic2, Globe } from 'lucide-react';
 import { formatDuration } from '../utils/lyricsApi';
+
+function Thumbnail({ src, title }) {
+  const [error, setError] = useState(false);
+  if (!src || error) {
+    return (
+      <div className="w-12 h-12 rounded-xl bg-linear-to-br from-spotify/20 to-accent/20 flex items-center justify-center shrink-0">
+        <Music2 className="w-6 h-6 text-spotify/60" />
+      </div>
+    );
+  }
+  return (
+    <img
+      src={src}
+      alt={title}
+      onError={() => setError(true)}
+      className="w-12 h-12 rounded-xl object-cover shrink-0 shadow-md"
+    />
+  );
+}
 
 export default function SearchResults({ results, queue, onAddToQueue, isLoading }) {
   if (isLoading) {
     return (
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 mt-8">
         {Array.from({ length: 6 }).map((_, i) => (
-          <div key={i} className="rounded-2xl p-4 shimmer-loading h-32" />
+          <div key={i} className="rounded-2xl p-4 shimmer-loading h-36" />
         ))}
       </div>
     );
@@ -37,10 +57,7 @@ export default function SearchResults({ results, queue, onAddToQueue, isLoading 
               style={{ animationDelay: `${index * 0.05}s` }}
             >
               <div className="flex items-start gap-3">
-                {/* Album art placeholder */}
-                <div className="w-12 h-12 rounded-xl bg-linear-to-br from-spotify/20 to-accent/20 flex items-center justify-center shrink-0">
-                  <Music2 className="w-6 h-6 text-spotify/60" />
-                </div>
+                <Thumbnail src={song.thumbnail} title={song.title} />
 
                 <div className="flex-1 min-w-0">
                   <h4 className="text-sm font-semibold text-white truncate">
@@ -56,7 +73,7 @@ export default function SearchResults({ results, queue, onAddToQueue, isLoading 
               </div>
 
               {/* Stats row */}
-              <div className="flex items-center gap-3 mt-3">
+              <div className="flex items-center gap-2 mt-3 flex-wrap">
                 {song.duration > 0 && (
                   <span className="flex items-center gap-1 text-xs text-gray-500">
                     <Clock className="w-3 h-3" />
@@ -67,6 +84,12 @@ export default function SearchResults({ results, queue, onAddToQueue, isLoading 
                   <span className="flex items-center gap-1 text-xs text-emerald-400/70">
                     <Mic2 className="w-3 h-3" />
                     Synced
+                  </span>
+                )}
+                {song.language && (
+                  <span className="flex items-center gap-1 text-xs text-sky-400/70" title={song.language.name}>
+                    <Globe className="w-3 h-3" />
+                    {song.language.flag} {song.language.name}
                   </span>
                 )}
                 {!song.hasLyrics && (

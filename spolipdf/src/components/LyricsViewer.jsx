@@ -10,6 +10,8 @@ import {
   Subtitles,
   Copy,
   Check,
+  Globe,
+  Loader2,
 } from 'lucide-react';
 import { formatDuration } from '../utils/lyricsApi';
 import {
@@ -19,7 +21,26 @@ import {
   downloadAsSRT,
 } from '../utils/exporters';
 
-export default function LyricsViewer({ song, onClose }) {
+function LyricsThumb({ src }) {
+  const [error, setError] = useState(false);
+  if (!src || error) {
+    return (
+      <div className="w-14 h-14 rounded-2xl bg-linear-to-br from-spotify/20 to-accent/20 flex items-center justify-center shrink-0">
+        <Music2 className="w-7 h-7 text-spotify" />
+      </div>
+    );
+  }
+  return (
+    <img
+      src={src}
+      alt=""
+      onError={() => setError(true)}
+      className="w-14 h-14 rounded-2xl object-cover shrink-0 shadow-lg"
+    />
+  );
+}
+
+export default function LyricsViewer({ song, onClose, pdfSettings }) {
   const [showSynced, setShowSynced] = useState(!!song.syncedLyrics);
   const [copied, setCopied] = useState(false);
   const [downloadingFormat, setDownloadingFormat] = useState(null);
@@ -48,7 +69,7 @@ export default function LyricsViewer({ song, onClose }) {
           downloadAsTXT(song);
           break;
         case 'pdf':
-          downloadAsPDF(song);
+          await downloadAsPDF(song, pdfSettings);
           break;
         case 'srt':
           downloadAsSRT(song);
@@ -109,13 +130,11 @@ export default function LyricsViewer({ song, onClose }) {
         <div className="p-6 border-b border-white/5">
           <div className="flex items-start justify-between">
             <div className="flex items-center gap-4">
-              <div className="w-14 h-14 rounded-2xl bg-linear-to-br from-spotify/20 to-accent/20 flex items-center justify-center shrink-0">
-                <Music2 className="w-7 h-7 text-spotify" />
-              </div>
+              <LyricsThumb src={song.thumbnail} />
               <div>
                 <h2 className="text-xl font-bold text-white">{song.title}</h2>
                 <p className="text-sm text-gray-400 mt-0.5">{song.artist}</p>
-                <div className="flex items-center gap-3 mt-1.5">
+                <div className="flex items-center gap-3 mt-1.5 flex-wrap">
                   {song.album && (
                     <span className="text-xs text-gray-500">{song.album}</span>
                   )}
@@ -123,6 +142,12 @@ export default function LyricsViewer({ song, onClose }) {
                     <span className="flex items-center gap-1 text-xs text-gray-500">
                       <Clock className="w-3 h-3" />
                       {formatDuration(song.duration)}
+                    </span>
+                  )}
+                  {song.language && (
+                    <span className="flex items-center gap-1 text-xs text-sky-400/70">
+                      <Globe className="w-3 h-3" />
+                      {song.language.flag} {song.language.name}
                     </span>
                   )}
                 </div>
@@ -211,15 +236,16 @@ export default function LyricsViewer({ song, onClose }) {
           <div className="grid grid-cols-2 sm:grid-cols-4 gap-2">
             {downloadFormats.map((fmt) => {
               const Icon = fmt.icon;
+              const isDownloading = downloadingFormat === fmt.id;
               return (
                 <button
                   key={fmt.id}
                   onClick={() => handleDownload(fmt.id)}
-                  disabled={downloadingFormat === fmt.id}
+                  disabled={isDownloading}
                   className={`flex items-center justify-center gap-2 py-2.5 px-3 rounded-xl border text-sm font-medium transition-all cursor-pointer ${fmt.bgColor} ${fmt.color}`}
                 >
-                  {downloadingFormat === fmt.id ? (
-                    <Check className="w-4 h-4" />
+                  {isDownloading ? (
+                    <Loader2 className="w-4 h-4 animate-spin" />
                   ) : (
                     <Icon className="w-4 h-4" />
                   )}

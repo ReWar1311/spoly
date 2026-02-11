@@ -22,7 +22,7 @@ export default function Hero({ onScrollToSearch }) {
           className="text-4xl sm:text-5xl lg:text-7xl font-black text-white leading-tight tracking-tight mb-6 animate-fade-in-up"
           style={{ animationDelay: '0.1s' }}
         >
-          Your Spotify Lyrics,{' '}
+          Your Song's Lyrics,{' '}
           <span className="bg-linear-to-r from-spotify via-emerald-400 to-teal-300 bg-clip-text text-transparent">
             Any Format
           </span>

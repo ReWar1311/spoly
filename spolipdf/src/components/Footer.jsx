@@ -10,12 +10,12 @@ export default function Footer() {
               <Music className="w-4 h-4 text-white" />
             </div>
             <span className="text-sm font-semibold text-white">
-              Spo<span className="text-spotify">Ly</span>PDF
+              Spo<span className="text-spotify">Ly</span>
             </span>
           </div>
 
           <p className="text-xs text-gray-500 flex items-center gap-1">
-            Made with <Heart className="w-3 h-3 text-red-400 fill-red-400" /> using React & LRCLIB
+            Made with <Heart className="w-3 h-3 text-red-400 fill-red-400" /> by <a href="https://github.com/ReWar1311" target="_blank" rel="noopener noreferrer" className="underline">Prashant ReWar</a>
           </p>
 
           <p className="text-xs text-gray-600">
