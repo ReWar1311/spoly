@@ -205,7 +205,7 @@ function App() {
       {/* Floating Action Button — small screens only */}
       <button
         onClick={queue.length > 0 ? scrollToQueue : scrollToSearch}
-        className="sm:hidden fixed bottom-5 left-5 z-40 w-12 h-12 rounded-full bg-spotify shadow-lg shadow-spotify/30 flex items-center justify-center text-white active:scale-90 transition-all cursor-pointer"
+        className="sm:hidden fixed bottom-5 right-5 z-40 w-12 h-12 rounded-full bg-spotify shadow-lg shadow-spotify/30 flex items-center justify-center text-white active:scale-90 transition-all cursor-pointer"
         aria-label={queue.length > 0 ? 'Go to queue' : 'Go to search'}
       >
         {queue.length > 0 ? (
