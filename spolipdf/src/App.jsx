@@ -1,4 +1,5 @@
 import { useState, useRef, useCallback } from 'react';
+import { Search, ListMusic } from 'lucide-react';
 import Header from './components/Header';
 import Hero from './components/Hero';
 import SearchBar from './components/SearchBar';
@@ -27,6 +28,7 @@ function App() {
   const [pdfSettings, setPdfSettings] = useState(DEFAULT_PDF_SETTINGS);
   const [settingsOpen, setSettingsOpen] = useState(false);
   const searchRef = useRef(null);
+  const queueRef = useRef(null);
 
   const showToast = useCallback((message, type = 'error') => {
     setToast({ message, type });
@@ -135,6 +137,10 @@ function App() {
     searchRef.current?.scrollIntoView({ behavior: 'smooth', block: 'center' });
   }, []);
 
+  const scrollToQueue = useCallback(() => {
+    queueRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  }, []);
+
   return (
     <div className="min-h-screen flex flex-col">
       <Header
@@ -164,12 +170,14 @@ function App() {
             isLoading={isSearching}
           />
 
-          <SongQueue
-            queue={queue}
-            onRemove={handleRemoveFromQueue}
-            onSelect={setSelectedSong}
-            selectedId={selectedSong?.id}
-          />
+          <div ref={queueRef}>
+            <SongQueue
+              queue={queue}
+              onRemove={handleRemoveFromQueue}
+              onSelect={setSelectedSong}
+              selectedId={selectedSong?.id}
+            />
+          </div>
 
           <BatchDownload queue={queue} pdfSettings={pdfSettings} />
         </section>
@@ -193,6 +201,24 @@ function App() {
         settings={pdfSettings}
         onUpdate={setPdfSettings}
       />
+
+      {/* Floating Action Button — small screens only */}
+      <button
+        onClick={queue.length > 0 ? scrollToQueue : scrollToSearch}
+        className="sm:hidden fixed bottom-5 left-5 z-40 w-12 h-12 rounded-full bg-spotify shadow-lg shadow-spotify/30 flex items-center justify-center text-white active:scale-90 transition-all cursor-pointer"
+        aria-label={queue.length > 0 ? 'Go to queue' : 'Go to search'}
+      >
+        {queue.length > 0 ? (
+          <div className="relative">
+            <ListMusic className="w-5 h-5" />
+            <span className="absolute -top-2 -right-2.5 w-4 h-4 rounded-full bg-white text-spotify text-[10px] font-bold flex items-center justify-center">
+              {queue.length}
+            </span>
+          </div>
+        ) : (
+          <Search className="w-5 h-5" />
+        )}
+      </button>
 
       {/* Toast */}
       {toast && (
